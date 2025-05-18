@@ -5,6 +5,16 @@
 
 Platform berbasis web Career Development Center (CDC) untuk UIN Raden Intan Lampung, dirancang untuk memfasilitasi mahasiswa dalam mengakses peluang magang, loker umum, serta mengikuti berbagai event karir.
 
+👥 Development Team
+
+The CDC UIN RIL platform was developed by a dedicated team of talented individuals:
+
+- Dosen Pengampu : Wawan Gunawan, M.Ti
+
+- Fredli Fourqoni : 2271020103
+- Ekta Pramudya  : 2271020094
+- Fillah Ramadani : 2271020102
+
 ## Fitur Utama
 
 ### Admin (Superuser)
