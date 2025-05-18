@@ -2,7 +2,6 @@
 
 ![Laravel](https://img.shields.io/badge/Laravel-v10-FF2D20?style=flat-square&logo=laravel)
 ![PHP](https://img.shields.io/badge/PHP-8.1-777BB4?style=flat-square&logo=php)
-![Bootstrap](https://img.shields.io/badge/Bootstrap-v5-7952B3?style=flat-square&logo=bootstrap)
 
 Platform berbasis web Career Development Center (CDC) untuk UIN Raden Intan Lampung, dirancang untuk memfasilitasi mahasiswa dalam mengakses peluang magang, loker umum, serta mengikuti berbagai event karir.
 
@@ -35,7 +34,7 @@ Platform berbasis web Career Development Center (CDC) untuk UIN Raden Intan Lamp
 
 ## Teknologi yang Digunakan
 - Backend: Laravel 10, PHP 8.1
-- Frontend: Bootstrap 5, Vite
+- Frontend: Tailwind CSS, Vite
 - Database: MySQL / MariaDB
 - Version Control: Git & GitHub
 
