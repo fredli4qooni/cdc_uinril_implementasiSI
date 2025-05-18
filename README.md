@@ -39,9 +39,23 @@ Platform berbasis web Career Development Center (CDC) untuk UIN Raden Intan Lamp
 - Version Control: Git & GitHub
 
 ## Screenshot
-*(Tempatkan beberapa screenshot di sini)*
-![Dashboard Admin](path/to/screenshot_admin.png)
-![Dashboard Mahasiswa](path/to/screenshot_mahasiswa.png)
+
+Berikut adalah beberapa tampilan dari aplikasi CDC UIN RIL:
+
+**Login Mahasiswa**
+![Dashboard Admin](docs/screenshots/Login_Mahasiswa.png)
+
+**Dashboard Mahasiswa**
+![Dashboard Mahasiswa](docs/screenshots/dashboard_mahasiswa.png)
+
+**Halaman Lowongan (Mahasiswa)**
+![Halaman Lowongan Mahasiswa](docs/screenshots/lowongan_menu.png)
+
+**Status Magang generate sertifikat**
+![Halaman Detail Lowongan Perusahaan](docs/screenshots/detail_magang.png)
+
+**Dashboard Perusahaan**
+![Halaman Detail Lowongan Perusahaan](docs/screenshots/dashboard_company.png)
 
 ## Instalasi
 1. Clone repositori: `git clone https://github.com/NAMA_USER_ANDA/NAMA_REPO_ANDA.git`
