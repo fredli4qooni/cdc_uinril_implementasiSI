@@ -5,6 +5,16 @@
 
 Platform berbasis web Career Development Center (CDC) untuk UIN Raden Intan Lampung, dirancang untuk memfasilitasi mahasiswa dalam mengakses peluang magang, loker umum, serta mengikuti berbagai event karir.
 
+👥 Development Team
+
+The CDC UIN RIL platform was developed by a dedicated team of talented individuals:
+
+- Dosen Pengampu : Wawan Gunawan, M.Ti
+
+- Fredli Fourqoni : 2271020103
+- Ekta Pramudya  : 2271020094
+- Fillah Ramadani : 2271020102
+
 ## Fitur Utama
 
 ### Admin (Superuser)
@@ -39,13 +49,27 @@ Platform berbasis web Career Development Center (CDC) untuk UIN Raden Intan Lamp
 - Version Control: Git & GitHub
 
 ## Screenshot
-*(Tempatkan beberapa screenshot di sini)*
-![Dashboard Admin](path/to/screenshot_admin.png)
-![Dashboard Mahasiswa](path/to/screenshot_mahasiswa.png)
+
+Berikut adalah beberapa tampilan dari aplikasi CDC UIN RIL:
+
+**Login Mahasiswa**
+![Dashboard Admin](docs/screenshots/Login_Mahasiswa.png)
+
+**Dashboard Mahasiswa**
+![Dashboard Mahasiswa](docs/screenshots/dashboard_mahasiswa.png)
+
+**Halaman Lowongan (Mahasiswa)**
+![Halaman Lowongan Mahasiswa](docs/screenshots/lowongan_menu.png)
+
+**Status Magang generate sertifikat**
+![Halaman Detail Lowongan Perusahaan](docs/screenshots/detail_magang.png)
+
+**Dashboard Perusahaan**
+![Halaman Detail Lowongan Perusahaan](docs/screenshots/dashboard_company.png)
 
 ## Instalasi
-1. Clone repositori: `git clone https://github.com/NAMA_USER_ANDA/NAMA_REPO_ANDA.git`
-2. Masuk ke direktori proyek: `cd NAMA_REPO_ANDA`
+1. Clone repositori: `git clone https://github.com/fredli4qooni/cdc_uinril_implementasiSI.git`
+2. Masuk ke direktori proyek: `cd cdc_uinril_implementasiSI`
 3. Install dependensi PHP: `composer install`
 4. Salin file environment: `cp .env.example .env`
 5. Generate application key: `php artisan key:generate`
