@@ -22,18 +22,6 @@
                     </p>
                 </div>
                 <div class="mt-4 md:mt-0 flex space-x-3">
-                    <a href="{{ route('company.vacancies.show', $vacancy->id) }}"
-                        class="inline-flex items-center px-4 py-2 rounded-lg border border-teal-300 bg-white text-teal-700 hover:bg-teal-50 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-md">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                            </path>
-                        </svg>
-                        Lihat Detail
-                    </a>
                     <a href="{{ route('company.vacancies.index') }}"
                         class="inline-flex items-center px-4 py-2 rounded-lg border border-teal-300 bg-white text-teal-700 hover:bg-teal-50 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-md">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -153,22 +141,7 @@
                                 <p class="text-sm font-medium capitalize">{{ $vacancy->status }}</p>
                             </div>
                         </div>
-                        <div class="flex items-center">
-                            <div class="text-teal-600">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                                    </path>
-                                </svg>
-                            </div>
-                            <div>
-                                <span class="text-sm text-gray-500">Total dilihat:</span>
-                                <p class="text-sm font-medium">{{ $vacancy->views ?? 0 }} kali</p>
-                            </div>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
