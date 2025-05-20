@@ -68,8 +68,8 @@ Berikut adalah beberapa tampilan dari aplikasi CDC UIN RIL:
 ![Halaman Detail Lowongan Perusahaan](docs/screenshots/dashboard_company.png)
 
 ## Instalasi
-1. Clone repositori: `git clone https://github.com/NAMA_USER_ANDA/NAMA_REPO_ANDA.git`
-2. Masuk ke direktori proyek: `cd NAMA_REPO_ANDA`
+1. Clone repositori: `git clone https://github.com/fredli4qooni/cdc_uinril_implementasiSI.git`
+2. Masuk ke direktori proyek: `cd cdc_uinril_implementasiSI`
 3. Install dependensi PHP: `composer install`
 4. Salin file environment: `cp .env.example .env`
 5. Generate application key: `php artisan key:generate`
