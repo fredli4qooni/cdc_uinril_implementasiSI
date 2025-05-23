@@ -1,5 +1,4 @@
-@extends('layouts.student')
-
+@extends('layouts.app')
 @section('title', 'Detail Lowongan: ' . $vacancy->title)
 
 @section('content')
@@ -8,7 +7,7 @@
             <div class="w-full max-w-5xl">
                 {{-- Tombol Kembali dengan animasi hover --}}
                 <div class="mb-6">
-                    <a href="{{ url()->previous(route('mahasiswa.vacancies.index')) }}"
+                    <a href="{{ url()->previous(route('public.vacancies.index')) }}"
                         class="group inline-flex items-center px-4 py-2 bg-white text-indigo-700 border border-indigo-200 rounded-lg hover:bg-indigo-50 transition-all duration-300 shadow-sm hover:shadow transform hover:-translate-y-1">
                         <i class="fas fa-arrow-left mr-2 group-hover:animate-pulse"></i> 
                         <span class="font-medium">Kembali ke Daftar Lowongan</span>

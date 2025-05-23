@@ -1,6 +1,5 @@
 {{-- resources/views/mahasiswa/events/index.blade.php --}}
-@extends('layouts.student')
-
+@extends('layouts.app')
 @section('title', 'Informasi Event & Loker Umum')
 
 @section('content')

@@ -1,6 +1,5 @@
 {{-- resources/views/mahasiswa/dashboard.blade.php --}}
-@extends('layouts.student')
-
+@extends('layouts.app')
 @section('title', 'Dashboard Mahasiswa')
 
 @push('styles')
@@ -197,7 +196,7 @@
                                     <i class="fas fa-file-alt text-2xl"></i>
                                 </div>
                                 <p class="text-gray-500 mb-4">Anda belum pernah mendaftar lowongan magang.</p>
-                                <a href="{{ route('mahasiswa.vacancies.index') }}"
+                                <a href="{{ route('public.vacancies.index') }}"
                                     class="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-300">
                                     <i class="fas fa-search mr-1.5"></i> Cari Lowongan Sekarang
                                 </a>
@@ -246,7 +245,7 @@
                                 @endforeach
                             </div>
                             <div class="px-6 py-4 bg-gray-50 text-center">
-                                <a href="{{ route('mahasiswa.vacancies.index') }}"
+                                <a href="{{ route('public.vacancies.index') }}"
                                     class="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-300">
                                     <i class="fas fa-search mr-1.5"></i> Lihat Semua Lowongan Magang
                                 </a>
@@ -307,7 +306,7 @@
                                 @endforeach
                             </div>
                             <div class="px-6 py-4 bg-gray-50 text-center">
-                                <a href="{{ route('mahasiswa.events.index') }}"
+                                <a href="{{ route('public.events.index') }}"
                                     class="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-300">
                                     <i class="fas fa-calendar-alt mr-1.5"></i> Lihat Semua Event & Loker
                                 </a>

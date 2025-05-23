@@ -1,6 +1,5 @@
 {{-- resources/views/mahasiswa/profile/edit.blade.php --}}
-@extends('layouts.student')
-
+@extends('layouts.app')
 @section('title', 'Edit Profil Saya')
 
 @section('content')

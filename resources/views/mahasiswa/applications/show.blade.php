@@ -1,6 +1,5 @@
 {{-- resources/views/mahasiswa/applications/show.blade.php --}}
-@extends('layouts.student')
-
+@extends('layouts.app')
 @section('title', 'Detail Pendaftaran Lowongan')
 
 @section('content')

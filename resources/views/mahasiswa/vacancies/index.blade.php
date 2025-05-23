@@ -1,6 +1,5 @@
 {{-- resources/views/mahasiswa/vacancies/index.blade.php --}}
-@extends('layouts.student')
-
+@extends('layouts.app')
 @section('title', 'Lowongan Magang Kerjasama')
 
 @section('content')

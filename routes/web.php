@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\AdminLoginController;
 
 // Controller Admin
-use App\Http\Controllers\Admin\DashboardController as AdminDashboardController; // Alias agar tidak konflik
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController; 
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\VacancyController;
 use App\Http\Controllers\Admin\EventController;
@@ -19,36 +19,30 @@ use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardCont
 use App\Http\Controllers\Mahasiswa\VacancyController as MahasiswaVacancyController;
 use App\Http\Controllers\Mahasiswa\EventController as MahasiswaEventController;
 use App\Http\Controllers\Mahasiswa\ApplicationController as MahasiswaApplicationController;
-use App\Http\Controllers\Mahasiswa\ProfileController as MahasiswaProfileController; // Asumsi controller profil mahasiswa
+use App\Http\Controllers\Mahasiswa\ProfileController as MahasiswaProfileController; 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\HomeController; // <-- IMPORT INI
+
+// === RUTE PERUSAHAAN MITRA  ===
+use App\Http\Controllers\Auth\CompanyLoginController;
+use App\Http\Controllers\Company\DashboardController as CompanyDashboardController;
+use App\Http\Controllers\Company\VacancyController as CompanyVacancyController;
+use App\Http\Controllers\Company\ApplicantController;
 
 
-
-// Halaman Awal / Landing Page
-Route::get('/', function () {
-    // Jika sudah login, arahkan ke dashboard masing-masing
-    if (Auth::check()) {
-        $user = Auth::user();
-        if ($user->role == 'admin') {
-            return redirect()->route('admin.dashboard');
-        } elseif ($user->role == 'mahasiswa') {
-            return redirect()->route('mahasiswa.dashboard');
-        } elseif ($user->role == 'perusahaan') {
-            // return redirect()->route('perusahaan.dashboard'); // Nanti jika ada
-            return redirect('/login'); // Fallback sementara
-        }
-    }
-    // Jika belum login, tampilkan halaman welcome atau arahkan ke login mahasiswa
-    // return view('welcome'); // Jika ada halaman welcome
-    return redirect()->route('login'); // Arahkan langsung ke login mahasiswa
-});
+// --- RUTE HALAMAN PUBLIK ---
+Route::get('/', [HomeController::class, 'index'])->name('home'); 
+Route::get('/tentang-kami', [HomeController::class, 'about'])->name('public.about');
+Route::get('/kontak-kami', [HomeController::class, 'contact'])->name('public.contact');
+Route::get('/untuk-perusahaan', [HomeController::class, 'forCompanies'])->name('public.forCompanies');
+Route::get('/lowongan', [HomeController::class, 'publicVacancies'])->name('public.vacancies.index');
+Route::get('/event-loker', [HomeController::class, 'publicEvents'])->name('public.events.index');
 
 // === RUTE AUTENTIKASI ADMIN ===
 Route::prefix('admin')->group(function () {
     Route::get('login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
     Route::post('login', [AdminLoginController::class, 'login']);
     Route::post('logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
-    // Anda bisa menambahkan route lain seperti forgot password khusus admin di sini jika perlu
 });
 
 // === RUTE ADMIN (Membutuhkan Login Admin) ===
@@ -80,18 +74,18 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
 
 // === RUTE MAHASISWA (Membutuhkan Login Mahasiswa/Umum) ===
-// Middleware 'auth' saja cukup karena role mahasiswa adalah default/umum setelah login via Breeze
 Route::middleware(['auth', 'mahasiswa'])->prefix('mahasiswa')->name('mahasiswa.')->group(function () { 
     // Dashboard Mahasiswa
     Route::get('/dashboard', [MahasiswaDashboardController::class, 'index'])->name('dashboard');
 
     // Lihat Lowongan Magang Kerjasama
-    Route::get('/lowongan', [MahasiswaVacancyController::class, 'index'])->name('vacancies.index');
+    
+    //Route::get('/lowongan', [MahasiswaVacancyController::class, 'index'])->name('vacancies.index');
     Route::get('/lowongan/{vacancy}', [MahasiswaVacancyController::class, 'show'])->name('vacancies.show');
     Route::post('/lowongan/{vacancy}/apply', [MahasiswaVacancyController::class, 'apply'])->name('vacancies.apply'); // Proses pendaftaran
 
     // Lihat Event & Loker Umum
-    Route::get('/event-loker', [MahasiswaEventController::class, 'index'])->name('events.index');
+    //Route::get('/event-loker', [MahasiswaEventController::class, 'index'])->name('events.index');
     Route::get('/event-loker/{event}', [MahasiswaEventController::class, 'show'])->name('events.show'); // Detail jika perlu
 
     // Lihat Status Pendaftaran Pribadi
@@ -106,11 +100,6 @@ Route::middleware(['auth', 'mahasiswa'])->prefix('mahasiswa')->name('mahasiswa.'
     });
 });
 
-// === RUTE PERUSAHAAN MITRA (Nanti Dibuat) ===
-use App\Http\Controllers\Auth\CompanyLoginController;
-use App\Http\Controllers\Company\DashboardController as CompanyDashboardController;
-use App\Http\Controllers\Company\VacancyController as CompanyVacancyController;
-use App\Http\Controllers\Company\ApplicantController;
 
 // --- Rute Autentikasi Perusahaan Mitra ---
 Route::prefix('perusahaan')->name('company.')->group(function () {

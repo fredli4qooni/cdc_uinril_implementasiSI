@@ -1,6 +1,5 @@
 {{-- resources/views/mahasiswa/events/show.blade.php --}}
-@extends('layouts.student')
-
+@extends('layouts.app')
 @section('title', 'Detail: ' . $event->title)
 
 @section('content')
@@ -9,7 +8,7 @@
             <div class="w-full max-w-5xl">
                 {{-- Tombol Kembali dengan animasi hover --}}
                 <div class="mb-6">
-                    <a href="{{ route('mahasiswa.events.index') }}" 
+                    <a href="{{ route('public.events.index') }}" 
                        class="group inline-flex items-center px-4 py-2 bg-white text-indigo-700 border border-indigo-200 rounded-lg hover:bg-indigo-50 transition-all duration-300 shadow-sm hover:shadow transform hover:-translate-y-1">
                         <i class="fas fa-arrow-left mr-2 group-hover:animate-pulse"></i> 
                         <span class="font-medium">Kembali ke Daftar Event/Loker</span>
