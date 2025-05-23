@@ -64,6 +64,16 @@ Berikut adalah beberapa tampilan dari aplikasi CDC UIN RIL:
 **Status Magang generate sertifikat**
 ![Halaman Detail Lowongan Perusahaan](docs/screenshots/detail_magang.png)
 
+**Dashboard Admin**
+![Dashboard Admin](docs/screenshots/kelola_mahasiswa.png)
+
+**Manajemen Perusahaan Admin**
+![Dashboard Admin](docs/screenshots/kelola_perusahaan_admin.png)
+
+**Manajemen mahasiswa Admin**
+![Dashboard Admin](docs/screenshots/dashboard_admin.png)
+
+
 **Dashboard Perusahaan**
 ![Halaman Detail Lowongan Perusahaan](docs/screenshots/dashboard_company.png)
 
