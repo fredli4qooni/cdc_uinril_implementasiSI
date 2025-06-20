@@ -276,6 +276,10 @@
                                                class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200 {{ request()->routeIs('mahasiswa.applications.index') ? 'bg-blue-50 text-blue-600' : '' }}">
                                                 <i class="fas fa-file-signature w-5 mr-3"></i>Status Pendaftaran
                                             </a>
+                                            <a href="{{ route('mahasiswa.bookmarks.index') }}" 
+                                               class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200 {{ request()->routeIs('mahasiswa.bookmarks.index') ? 'bg-blue-50 text-blue-600' : '' }}">
+                                                <i class="fas fa-bookmark fa-fw w-5 mr-3"></i>Bookmarks
+                                            </a>
                                         @elseif(Auth::user()->role == 'admin')
                                             <a href="{{ route('admin.dashboard') }}" 
                                                class="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">

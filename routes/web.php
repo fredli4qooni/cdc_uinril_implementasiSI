@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\AdminLoginController;
 
 // Controller Admin
-use App\Http\Controllers\Admin\DashboardController as AdminDashboardController; 
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\VacancyController;
 use App\Http\Controllers\Admin\EventController;
@@ -19,24 +19,28 @@ use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardCont
 use App\Http\Controllers\Mahasiswa\VacancyController as MahasiswaVacancyController;
 use App\Http\Controllers\Mahasiswa\EventController as MahasiswaEventController;
 use App\Http\Controllers\Mahasiswa\ApplicationController as MahasiswaApplicationController;
-use App\Http\Controllers\Mahasiswa\ProfileController as MahasiswaProfileController; 
+use App\Http\Controllers\Mahasiswa\ProfileController as MahasiswaProfileController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController; // <-- IMPORT INI
+use App\Http\Controllers\Mahasiswa\BookmarkController; // <-- IMPORT INI
+
 
 // === RUTE PERUSAHAAN MITRA  ===
 use App\Http\Controllers\Auth\CompanyLoginController;
 use App\Http\Controllers\Company\DashboardController as CompanyDashboardController;
 use App\Http\Controllers\Company\VacancyController as CompanyVacancyController;
 use App\Http\Controllers\Company\ApplicantController;
+use App\Http\Controllers\Company\ProfileController as CompanyProfileController;
 
 
 // --- RUTE HALAMAN PUBLIK ---
-Route::get('/', [HomeController::class, 'index'])->name('home'); 
+Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/tentang-kami', [HomeController::class, 'about'])->name('public.about');
 Route::get('/kontak-kami', [HomeController::class, 'contact'])->name('public.contact');
 Route::get('/untuk-perusahaan', [HomeController::class, 'forCompanies'])->name('public.forCompanies');
 Route::get('/lowongan', [HomeController::class, 'publicVacancies'])->name('public.vacancies.index');
 Route::get('/event-loker', [HomeController::class, 'publicEvents'])->name('public.events.index');
+
 
 // === RUTE AUTENTIKASI ADMIN ===
 Route::prefix('admin')->group(function () {
@@ -74,12 +78,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
 
 // === RUTE MAHASISWA (Membutuhkan Login Mahasiswa/Umum) ===
-Route::middleware(['auth', 'mahasiswa'])->prefix('mahasiswa')->name('mahasiswa.')->group(function () { 
+Route::middleware(['auth', 'mahasiswa'])->prefix('mahasiswa')->name('mahasiswa.')->group(function () {
     // Dashboard Mahasiswa
     Route::get('/dashboard', [MahasiswaDashboardController::class, 'index'])->name('dashboard');
 
     // Lihat Lowongan Magang Kerjasama
-    
+
     //Route::get('/lowongan', [MahasiswaVacancyController::class, 'index'])->name('vacancies.index');
     Route::get('/lowongan/{vacancy}', [MahasiswaVacancyController::class, 'show'])->name('vacancies.show');
     Route::post('/lowongan/{vacancy}/apply', [MahasiswaVacancyController::class, 'apply'])->name('vacancies.apply'); // Proses pendaftaran
@@ -98,6 +102,11 @@ Route::middleware(['auth', 'mahasiswa'])->prefix('mahasiswa')->name('mahasiswa.'
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy'); // Ini untuk hapus akun, kita biarkan dulu
     });
+
+    Route::post('/lowongan/{vacancy}/toggle-bookmark', [App\Http\Controllers\Mahasiswa\VacancyController::class, 'toggleBookmark'])->name('vacancies.toggleBookmark');
+    Route::get('/lowongan-tersimpan', [BookmarkController::class, 'index'])->name('bookmarks.index');
+    Route::patch('/pendaftaran/{application}/cancel', [App\Http\Controllers\Mahasiswa\ApplicationController::class, 'cancel'])->name('applications.cancel');
+
 });
 
 
@@ -129,6 +138,9 @@ Route::middleware(['auth', 'company'])->prefix('perusahaan')->name('company.')->
     Route::post('pendaftar/{application}/upload-sertifikat', [ApplicantController::class, 'uploadCertificate'])->name('applicants.uploadCertificate');
     // Rute untuk Hapus Sertifikat
     Route::delete('pendaftar/{application}/remove-sertifikat', [ApplicantController::class, 'removeCertificate'])->name('applicants.removeCertificate');
+
+    Route::get('profil/edit', [CompanyProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('profil', [CompanyProfileController::class, 'update'])->name('profile.update'); // Menggunakan PATCH untuk 
 });
 
 

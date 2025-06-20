@@ -28,6 +28,11 @@ class HomeController extends Controller
             }
         }
         */
+        $partnerLogos = Company::whereNotNull('logo_path') // Hanya yang punya logo
+                                ->where('logo_path', '!=', '')   // Pastikan path tidak string kosong
+                                ->inRandomOrder() // Tampilkan secara acak setiap kali halaman dimuat
+                                ->limit(12)      // Batasi jumlah logo yang ditampilkan
+                                ->get(['id', 'name', 'logo_path', 'website']);
 
         // Ambil data untuk ditampilkan di landing page (tetap sama)
         $latestVacancies = Vacancy::where('type', 'kerjasama')
@@ -59,7 +64,8 @@ class HomeController extends Controller
             'latestVacancies',
             'latestEvents',
             'totalActiveVacancies',
-            'totalPartnerCompanies'
+            'totalPartnerCompanies',
+            'partnerLogos' 
         ));
     }
 
@@ -73,9 +79,6 @@ class HomeController extends Controller
      */
     public function contact(): View
     {
-        // Anda bisa mengirim data kontak dari database jika disimpan di sana
-        // $contactInfo = ContactSetting::first();
-        // return view('public.contact', compact('contactInfo'));
         return view('public.contact');
     }
 
@@ -121,7 +124,7 @@ class HomeController extends Controller
 
     /**
      * Menampilkan daftar event & loker umum publik.
-     */
+    */
     public function publicEvents(Request $request): View
     {
         $query = Event::where('is_published', true) // Hanya yang published

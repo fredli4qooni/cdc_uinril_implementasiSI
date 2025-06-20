@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Mahasiswa;
 use App\Http\Controllers\Controller;
 use App\Models\Vacancy;
 use App\Models\Application; 
+use App\Models\Bookmark; // Import Bookmark model
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse; 
@@ -61,7 +62,6 @@ class VacancyController extends Controller
              abort(404, 'Lowongan ini sudah ditutup (melewati deadline).');
         }
 
-
         // Load relasi company jika belum (sebenarnya tidak perlu jika pakai route model binding)
         $vacancy->loadMissing('company');
 
@@ -70,9 +70,60 @@ class VacancyController extends Controller
                            ->where('vacancy_id', $vacancy->id)
                            ->exists();
 
-        return view('mahasiswa.vacancies.show', compact('vacancy', 'hasApplied'));
+        // Cek apakah sudah di-bookmark
+        $isBookmarked = Auth::user()->bookmarkedVacancies()
+                             ->where('vacancy_id', $vacancy->id)
+                             ->exists();
+
+        // Cek pendaftaran aktif lain
+        $hasOtherActiveApplication = Application::where('user_id', Auth::id())
+                                          ->where('vacancy_id', '!=', $vacancy->id) // Kecuali untuk lowongan ini
+                                          ->whereIn('status', ['pending', 'reviewed', 'accepted'])
+                                          ->exists();
+
+        return view('mahasiswa.vacancies.show', compact('vacancy', 'hasApplied', 'isBookmarked', 'hasOtherActiveApplication'));
     }
 
+    /**
+     * Toggle bookmark status for a vacancy.
+     * Menambah atau menghapus bookmark untuk lowongan tertentu.
+     */
+    public function toggleBookmark(Request $request, Vacancy $vacancy)
+    {
+        $user = Auth::user();
+        
+        // Cek apakah lowongan sudah di-bookmark
+        $bookmark = $user->bookmarkedVacancies()->where('vacancy_id', $vacancy->id)->first();
+        
+        if ($bookmark) {
+            // Jika sudah ada, hapus (unbookmark)
+            $user->bookmarkedVacancies()->detach($vacancy->id);
+            $message = 'Lowongan dihapus dari daftar simpanan.';
+            $bookmarked = false;
+        } else {
+            // Jika belum ada, tambahkan (bookmark)
+            $user->bookmarkedVacancies()->attach($vacancy->id);
+            $message = 'Lowongan berhasil disimpan.';
+            $bookmarked = true;
+        }
+        
+        // Jika request via AJAX
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true, 
+                'message' => $message, 
+                'bookmarked' => $bookmarked
+            ]);
+        }
+        
+        // Jika request biasa, redirect back dengan pesan
+        return redirect()->back()->with('status', $message); // 'status' untuk notifikasi umum
+    }
+
+    /**
+     * Apply for a cooperation vacancy.
+     * Mendaftar ke lowongan kerjasama.
+     */
     public function apply(Vacancy $vacancy): RedirectResponse
     {
         $user = Auth::user();
@@ -99,14 +150,25 @@ class VacancyController extends Controller
         // Anda bisa menambahkan pengecekan field profil lainnya jika diperlukan
         // if (empty($user->studentProfile->major) || empty($user->studentProfile->phone_number)) { ... }
 
-        // 3. Cek Apakah Sudah Pernah Mendaftar
-        $existingApplication = Application::where('user_id', $user->id)
+        // 3. Cek Apakah Sudah Pernah Mendaftar ke LOWONGAN INI
+        $existingApplicationToThisVacancy = Application::where('user_id', $user->id)
                                          ->where('vacancy_id', $vacancy->id)
                                          ->first();
 
-        if ($existingApplication) {
+        if ($existingApplicationToThisVacancy) {
             return redirect()->route('mahasiswa.vacancies.show', $vacancy->id)
                          ->with('info', 'Anda sudah pernah mendaftar ke lowongan ini.');
+        }
+
+        // 4. VALIDASI BARU: Cek Apakah Mahasiswa Memiliki Pendaftaran Aktif Lain
+        //    Status aktif bisa 'pending', 'reviewed', atau 'accepted'
+        $activeApplicationExists = Application::where('user_id', $user->id)
+                                         ->whereIn('status', ['pending', 'reviewed', 'accepted'])
+                                         ->exists(); // Cukup cek keberadaannya
+
+        if ($activeApplicationExists) {
+            return redirect()->route('mahasiswa.vacancies.index') // Atau ke halaman status pendaftaran
+                         ->with('error', 'Anda sudah memiliki pendaftaran magang yang aktif (Pending, Reviewed, atau Accepted). Harap selesaikan atau batalkan pendaftaran tersebut sebelum mendaftar ke lowongan baru.');
         }
 
         // === Proses Pendaftaran ===

@@ -237,11 +237,7 @@
                 </button>
 
                 <!-- Forgot Password -->
-                <div class="text-center mt-4 form-element">
-                    <a href="#" class="text-sm text-indigo-600 hover:text-indigo-800 transition-colors">
-                        <i class="fas fa-question-circle mr-1"></i>{{ __('Lupa Password?') }}
-                    </a>
-                </div>
+                
             </form>
 
             <!-- Card Footer -->

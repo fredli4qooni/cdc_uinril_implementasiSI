@@ -23,7 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role', 
+        'role',
     ];
 
     /**
@@ -43,7 +43,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed', 
+        'password' => 'hashed',
     ];
 
     public function studentProfile(): HasOne
@@ -59,7 +59,17 @@ class User extends Authenticatable
 
     public function applications(): HasMany
     {
-        
+
         return $this->hasMany(Application::class);
+    }
+
+    public function bookmarks(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Bookmark::class);
+    }
+    // Atau jika Anda ingin langsung mendapatkan vacancies yang di-bookmark:
+    public function bookmarkedVacancies(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Vacancy::class, 'bookmarks', 'user_id', 'vacancy_id')->withTimestamps();
     }
 }

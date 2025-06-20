@@ -103,8 +103,7 @@
                         <div class="shrink-0 flex items-center">
                             <a href="{{ route('company.dashboard') }}"
                                 class="flex items-center text-teal-600 font-bold text-lg">
-                                <img src="{{ asset('images/logo.png') }}" alt="Company Logo"
-                                    class="h-20 w-auto mr-4">
+                                <img src="{{ asset('images/logo.png') }}" alt="Company Logo" class="h-20 w-auto mr-4">
                                 {{ Auth::user()->company->name ?? 'Dashboard Perusahaan' }}
                             </a>
                         </div>
@@ -154,6 +153,9 @@
                                 x-transition:leave="transition ease-in duration-75"
                                 x-transition:leave-start="transform opacity-100 scale-100"
                                 x-transition:leave-end="transform opacity-0 scale-95">
+                                <a href="{{ route('company.profile.edit') }}"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200 {{ request()->routeIs('company.profile.edit') ? 'bg-blue-50 text-blue-600' : '' }}">
+                                    <i class="fas fa-file-signature w-5 mr-1"></i>Edit Profile
                                 <a href="#"
                                     onclick="event.preventDefault(); document.getElementById('company-logout-form').submit();"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"

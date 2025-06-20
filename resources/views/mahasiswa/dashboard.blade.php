@@ -47,8 +47,36 @@
                 </div>
             </div>
 
-            {{-- 1. Alert Profil Belum Lengkap --}}
-            @if (!$isProfileComplete || !$isCvUploaded)
+            {{-- 1. Alert Profil Status --}}
+            @if ($profileCompleteness >= 100 && $isCvUploaded)
+                {{-- Alert Hijau untuk profil sudah lengkap --}}
+                <div
+                    class="bg-green-50 border-l-4 border-green-400 p-4 mb-6 rounded-lg shadow-sm transform transition-all duration-300 hover:shadow-md">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-check-circle text-green-400 text-xl mr-3 hover-rotate"></i>
+                        </div>
+                        <div>
+                            <p class="text-green-700">
+                                <span class="font-medium">Selamat! Profil Anda sudah lengkap ({{ $profileCompleteness }}%)
+                                    dan CV telah diunggah.</span>
+                                Anda sekarang dapat mendaftar ke semua lowongan magang yang tersedia.
+                            </p>
+                            <div class="mt-2 flex flex-wrap gap-2">
+                                <a href="{{ route('public.vacancies.index') }}"
+                                    class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-300">
+                                    <i class="fas fa-search mr-1.5"></i> Cari Lowongan Magang
+                                </a>
+                                <a href="{{ route('mahasiswa.profile.edit') }}"
+                                    class="inline-flex items-center px-3 py-1.5 border border-green-300 text-sm leading-4 font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-300">
+                                    <i class="fas fa-user-edit mr-1.5"></i> Edit Profil
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @else
+                {{-- Alert Kuning untuk profil belum lengkap --}}
                 <div
                     class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 rounded-lg shadow-sm transform transition-all duration-300 hover:shadow-md">
                     <div class="flex items-center">
@@ -57,7 +85,7 @@
                         </div>
                         <div>
                             <p class="text-yellow-700">
-                                @if (!$isProfileComplete)
+                                @if ($profileCompleteness < 100)
                                     Profil Anda belum lengkap ({{ $profileCompleteness }}%).
                                 @elseif(!$isCvUploaded)
                                     Anda belum mengunggah CV.

@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Admin CDC UIN RIL - @yield('title', 'Dashboard')</title>
+    <title>fillah - @yield('title', 'Dashboard')</title>
 
     <!-- Scripts & Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -78,7 +78,7 @@
         <div :class="{ 'translate-x-0': sidebarOpen, '-translate-x-full': !sidebarOpen }"
             class="fixed lg:static inset-y-0 left-0 w-64 transform transition-transform duration-300 ease-in-out lg:translate-x-0 z-30">
             <div class="flex flex-col h-full bg-indigo-800 shadow-lg">
-                
+
 
                 <!-- User Info -->
                 <div class="flex items-center px-4 py-3 bg-indigo-700 border-b border-indigo-600">

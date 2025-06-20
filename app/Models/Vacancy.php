@@ -4,8 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo; 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+
 class Vacancy extends Model
 {
     use HasFactory;
@@ -50,9 +51,18 @@ class Vacancy extends Model
      * Mendapatkan semua pendaftaran (applications) untuk lowongan ini.
      * (Akan digunakan nanti saat membuat modul pendaftaran)
      */
-    
-     public function applications(): HasMany
-     {
-         return $this->hasMany(Application::class);
-     }
+
+    public function applications(): HasMany
+    {
+        return $this->hasMany(Application::class);
+    }
+
+    public function bookmarks(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Bookmark::class);
+    }
+    public function bookmarkedByUsers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'bookmarks', 'vacancy_id', 'user_id')->withTimestamps();
+    }
 }

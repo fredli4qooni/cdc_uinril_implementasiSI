@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Company;          // Model Company
+use App\Models\CompanyPhoto;     // Model CompanyPhoto untuk gallery
 use App\Models\User;             // Model User (untuk opsi buat akun)
 use Illuminate\Http\Request;     // Object Request
 use Illuminate\Support\Facades\Hash; // Untuk hashing password user
-use Illuminate\Support\Facades\Storage; // Untuk manajemen file (logo)
+use Illuminate\Support\Facades\Storage; // Untuk manajemen file (logo & gallery)
 use Illuminate\Validation\Rule; // Untuk aturan validasi (contoh: unique)
 
 class CompanyController extends Controller
@@ -58,6 +59,23 @@ class CompanyController extends Controller
             'website' => 'nullable|url|max:255', // Pastikan format URL valid
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Logo: gambar, format tertentu, maks 2MB
 
+            // Field baru (Embed Gallery 1)
+            'industry' => 'nullable|string|max:255',
+            'employee_count_range' => 'nullable|string|max:50',
+            'full_address' => 'nullable|string',
+            'google_maps_embed_url' => ['nullable', 'string', 'max:1000', function ($attribute, $value, $fail) {
+                if ($value && (!str_starts_with($value, '<iframe') || !str_contains($value, 'google.com/maps/embed'))) {
+                    $fail('URL Google Maps Embed tidak valid. Harus berupa kode iframe dari Google Maps.');
+                }
+            }],
+            'linkedin_url' => 'nullable|url|max:255',
+            'instagram_url' => 'nullable|url|max:255',
+            'twitter_url' => 'nullable|url|max:255',
+
+            // Untuk Company Gallery
+            'gallery_photos' => 'nullable|array', // Array file foto
+            'gallery_photos.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Validasi setiap file
+
             // Validasi untuk Opsi Buat Akun User Perusahaan
             'create_user' => 'sometimes|boolean', // Checkbox 'create_user' ada atau tidak
             'user_email' => [
@@ -85,15 +103,39 @@ class CompanyController extends Controller
         }
 
         // 3. Simpan Data Perusahaan ke Database
-        $companyData = $validatedData; // Ambil data tervalidasi
-        $companyData['logo_path'] = $logoPath; // Tambahkan path logo
-
-        // Hapus data terkait user jika tidak membuat user
-        unset($companyData['create_user'], $companyData['user_email'], $companyData['user_password'], $companyData['user_password_confirmation']);
+        $companyData = [
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+            'address' => $validatedData['address'] ?? null,
+            'phone_number' => $validatedData['phone_number'] ?? null,
+            'description' => $validatedData['description'] ?? null,
+            'website' => $validatedData['website'] ?? null,
+            'logo_path' => $logoPath,
+            // Field baru
+            'industry' => $validatedData['industry'] ?? null,
+            'employee_count_range' => $validatedData['employee_count_range'] ?? null,
+            'full_address' => $validatedData['full_address'] ?? null,
+            'google_maps_embed_url' => $validatedData['google_maps_embed_url'] ?? null,
+            'linkedin_url' => $validatedData['linkedin_url'] ?? null,
+            'instagram_url' => $validatedData['instagram_url'] ?? null,
+            'twitter_url' => $validatedData['twitter_url'] ?? null,
+        ];
 
         $company = Company::create($companyData); // Buat record baru
 
-        // 4. Opsional: Buat Akun User Jika Diminta
+        // 4. Handle Upload Foto Galeri (jika ada)
+        if ($request->hasFile('gallery_photos')) {
+            foreach ($request->file('gallery_photos') as $file) {
+                $path = $file->store('gallery/companies/' . $company->id, 'public');
+                $company->photos()->create([
+                    'photo_path' => $path,
+                    // 'caption' => 'Default Caption', // Bisa ditambahkan jika diperlukan
+                    // 'order' => 0, // Bisa ditambahkan untuk sorting
+                ]);
+            }
+        }
+
+        // 5. Opsional: Buat Akun User Jika Diminta
         $userId = null;
         if ($request->boolean('create_user') && $company) {
             $user = User::create([
@@ -110,7 +152,7 @@ class CompanyController extends Controller
             $company->save();
         }
 
-        // 5. Redirect ke Halaman Index dengan Pesan Sukses
+        // 6. Redirect ke Halaman Index dengan Pesan Sukses
         return redirect()->route('admin.companies.index')
                          ->with('success', 'Perusahaan berhasil ditambahkan.');
     }
@@ -124,7 +166,8 @@ class CompanyController extends Controller
      */
     public function show(Company $company) // Menggunakan Route Model Binding
     {
-        // $company otomatis di-fetch berdasarkan ID di URL
+        // Load foto-foto perusahaan untuk ditampilkan
+        $company->load('photos');
         return view('admin.companies.show', compact('company')); // Tampilkan view detail
     }
 
@@ -137,6 +180,7 @@ class CompanyController extends Controller
      */
     public function edit(Company $company) // Menggunakan Route Model Binding
     {
+        $company->load('photos'); // Eager load foto-foto perusahaan
         return view('admin.companies.edit', compact('company')); // Tampilkan view form edit dengan data company
     }
 
@@ -164,7 +208,26 @@ class CompanyController extends Controller
             'description' => 'nullable|string',
             'website' => 'nullable|url|max:255',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            // Validasi untuk update user terkait 
+            'remove_logo' => 'sometimes|boolean', // Opsi hapus logo
+
+            // Field baru dari langkah sebelumnya (Embed Gallery 1)
+            'industry' => 'nullable|string|max:255',
+            'employee_count_range' => 'nullable|string|max:50',
+            'full_address' => 'nullable|string',
+            'google_maps_embed_url' => ['nullable', 'string', 'max:1000', function ($attribute, $value, $fail) {
+                if ($value && (!str_starts_with($value, '<iframe') || !str_contains($value, 'google.com/maps/embed'))) {
+                    $fail('URL Google Maps Embed tidak valid. Harus berupa kode iframe dari Google Maps.');
+                }
+            }],
+            'linkedin_url' => 'nullable|url|max:255',
+            'instagram_url' => 'nullable|url|max:255',
+            'twitter_url' => 'nullable|url|max:255',
+
+            // Untuk Company Gallery
+            'gallery_photos' => 'nullable|array', // Array file foto
+            'gallery_photos.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Validasi setiap file
+            'delete_photos' => 'nullable|array', // Array ID foto yang akan dihapus
+            'delete_photos.*' => 'integer|exists:company_photos,id', // Validasi ID foto
         ]);
 
         // 2. Handle File Upload (Update Logo)
@@ -176,20 +239,58 @@ class CompanyController extends Controller
             }
             // Upload logo baru
             $logoPath = $request->file('logo')->store('logos/companies', 'public');
-        } elseif ($request->boolean('remove_logo')) { // Tambahan: Opsi hapus logo tanpa upload baru
+        } elseif ($request->boolean('remove_logo')) { // Opsi hapus logo tanpa upload baru
              if ($company->logo_path && Storage::disk('public')->exists($company->logo_path)) {
                 Storage::disk('public')->delete($company->logo_path);
             }
             $logoPath = null; // Set path jadi null
         }
 
-        // 3. Update Data Perusahaan di Database
-        $updateData = $validatedData;
-        $updateData['logo_path'] = $logoPath; 
+        // 3. Update data company (termasuk field baru)
+        $company->update([
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+            'address' => $validatedData['address'] ?? null,
+            'phone_number' => $validatedData['phone_number'] ?? null,
+            'description' => $validatedData['description'] ?? null,
+            'website' => $validatedData['website'] ?? null,
+            'logo_path' => $logoPath,
+            // Field baru
+            'industry' => $validatedData['industry'] ?? null,
+            'employee_count_range' => $validatedData['employee_count_range'] ?? null,
+            'full_address' => $validatedData['full_address'] ?? null,
+            'google_maps_embed_url' => $validatedData['google_maps_embed_url'] ?? null,
+            'linkedin_url' => $validatedData['linkedin_url'] ?? null,
+            'instagram_url' => $validatedData['instagram_url'] ?? null,
+            'twitter_url' => $validatedData['twitter_url'] ?? null,
+        ]);
 
-        $company->update($updateData);
+        // 4. Handle Penghapusan Foto Galeri
+        if ($request->has('delete_photos')) {
+            foreach ($request->input('delete_photos') as $photoId) {
+                $photo = CompanyPhoto::where('id', $photoId)->where('company_id', $company->id)->first();
+                if ($photo) {
+                    if (Storage::disk('public')->exists($photo->photo_path)) {
+                        Storage::disk('public')->delete($photo->photo_path);
+                    }
+                    $photo->delete();
+                }
+            }
+        }
 
-        // 4. Redirect ke Halaman Index dengan Pesan Sukses
+        // 5. Handle Upload Foto Galeri Baru
+        if ($request->hasFile('gallery_photos')) {
+            foreach ($request->file('gallery_photos') as $file) {
+                $path = $file->store('gallery/companies/' . $company->id, 'public');
+                $company->photos()->create([
+                    'photo_path' => $path,
+                    // 'caption' => 'Default Caption', // Ambil caption dari input jika ada
+                    // 'order' => 0, // Atur order jika ada input
+                ]);
+            }
+        }
+
+        // 6. Redirect ke Halaman Index dengan Pesan Sukses
         return redirect()->route('admin.companies.index')
                          ->with('success', 'Data perusahaan berhasil diperbarui.');
     }
@@ -206,6 +307,15 @@ class CompanyController extends Controller
         // 1. Hapus File Logo dari Storage (jika ada)
         if ($company->logo_path && Storage::disk('public')->exists($company->logo_path)) {
             Storage::disk('public')->delete($company->logo_path);
+        }
+
+        // 2. Hapus semua foto gallery perusahaan
+        $photos = CompanyPhoto::where('company_id', $company->id)->get();
+        foreach ($photos as $photo) {
+            if (Storage::disk('public')->exists($photo->photo_path)) {
+                Storage::disk('public')->delete($photo->photo_path);
+            }
+            $photo->delete();
         }
 
         // 3. Hapus Data Perusahaan dari Database
